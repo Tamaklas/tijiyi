@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>wr</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f0f2f5;
+      text-align: center;
+    }
+    input, button {
+      margin: 8px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Wr gua tuh</h1>
+
+  <input type="number" id="currentWR" placeholder="Win Rate Sekarang (%)" min="0" max="100">
+  <input type="number" id="totalMatch" placeholder="Total Match Sekarang" min="1">
+  <input type="number" id="targetWR" placeholder="Target Win Rate (%)" min="0" max="100">
+  <br>
+  <button onclick="hitungMatchDibutuhkan()">Hitung</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function hitungMatchDibutuhkan() {
+      const currentWR = parseFloat(document.getElementById('currentWR').value);
+      const totalMatch = parseInt(document.getElementById('totalMatch').value);
+      const targetWR = parseFloat(document.getElementById('targetWR').value);
+
+      if (isNaN(currentWR) || isNaN(totalMatch) || isNaN(targetWR) || totalMatch <= 0) {
+        document.getElementById('result').innerText = 'Input tidak valid.';
+        return;
+      }
+
+      const winNow = (currentWR / 100) * totalMatch;
+
+      // Rumus: (menang sekarang + x) / (total match + x) = target WR
+      // Pecahin:
+      // (winNow + x) = (totalMatch + x) * (targetWR / 100)
+      // winNow + x = (totalMatch * targetWR/100) + (x * targetWR/100)
+      // winNow - (totalMatch * targetWR/100) = x * (targetWR/100 - 1)
+      const numerator = winNow - (totalMatch * targetWR / 100);
+      const denominator = (targetWR / 100) - 1;
+
+      const neededWins = Math.ceil(numerator / denominator);
+
+      if (neededWins < 0) {
+        document.getElementById('result').innerText = 'Win rate target sudah tercapai atau terlalu tinggi!';
+      } else {
+        document.getElementById('result').innerText = `Lu butuh menang ${neededWins} match berturut-turut!`;
+      }
+    }
+  </script>
+
+</body>
+</html>
